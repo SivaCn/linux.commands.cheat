@@ -1,0 +1,148 @@
+#!/usr/bin/python
+
+##
+##
+## EULA can be found at the Package's Home Directory.
+##
+##
+
+## ------------ Imports ----------- ##
+import os
+import sys
+## ------------ Imports ----------- ##
+
+__all__ = ['HelpMe']  # Exposed classes or methods.
+
+__author__ = r'Siva Cn (www.cnsiva.com)'
+
+NOT_AVAILABLE = """\nError: Unable to help you !, command not fed.\n\
+Use `help_me -a` to create help on this command.\n"""
+
+SHOW_USAGE = """\nUsage:\n\
+    help_me <command>\n"""
+
+
+class ReportError(object):
+    """."""
+    @classmethod
+    def not_available_msg(cls):
+        """."""
+        return NOT_AVAILABLE
+
+    @classmethod
+    def show_usage_msg(cls):
+        """."""
+        return SHOW_USAGE
+
+
+class Colored(object):
+    """."""
+    def __init__(self):
+        """."""
+        self.HEADER = '\033[95m'
+        self.OKBLUE = '\033[94m'
+        self.OKGREEN = '\033[92m'
+        self.WARNING = '\033[93m'
+        self.FAIL = '\033[91m'
+        self.ENDC = '\033[0m'
+        self.BOLD = "\\033[1m033[1m"
+
+        self.str_template = """{0}{1}{2}\n"""
+
+    def color_cmd(self, text):
+        return self.str_template.format( '', text, '' )
+
+    def color_info(self, text):
+        return self.str_template.format( self.OKBLUE, text, self.ENDC )
+
+    def color_docs(self, text):
+        return self.str_template.format( self.OKGREEN, text, self.ENDC )
+
+    def color_warn(self, text):
+        return self.str_template.format( self.OKGREEN, text, self.ENDC )
+
+
+class HelperClass(Colored, ReportError):
+    """."""
+    def __init__(self):
+        """."""
+        super(HelperClass, self).__init__()
+
+        self.SRC_DIR = os.path.join( os.environ['HOME'], '.help_me', 'src' )
+
+        self.available_cmds = [ _cmd for _cmd in os.listdir(self.SRC_DIR)
+                                if not _cmd.startswith('__') ]
+
+    def is_cmd_available(self, _command):
+        """."""
+        if _command in self.available_cmds:
+            return True
+
+        return False
+
+    def __colorise(self, text):
+        """."""
+        colorise = {'comment': self.color_info,
+                     'docs': self.color_docs,
+                     'warn': self.color_warn,
+                     'none': self.color_cmd
+                     }
+
+        if text.startswith('#'):
+            return colorise['comment'](text)
+        elif text.startswith('__DOC__'):
+            return colorise['docs'](text.strip('__DOC__'))
+        elif text.startswith('__WARN__'):
+            return colorise['warn'](text.strip('__WARN__'))
+        else:
+            return colorise['none'](text)
+
+    def __format_str(self, text):
+        """."""
+        return self.__colorise(text.strip())
+
+    def display(self, _command):
+        """."""
+        cmd_file_path = os.path.join( self.SRC_DIR, _command )
+
+        with open(cmd_file_path) as fp:
+            line = fp.readline()
+            while line:
+                sys.__stdout__.write( self.__format_str(line) )
+                line = fp.readline()
+
+
+class HelpMe(HelperClass):
+    """."""
+    def __init__(self):
+        """."""
+        super(HelpMe, self).__init__()
+
+    def __call__(self):
+        """."""
+        return self.main()
+
+    def parse_args(self):
+        """."""
+        pass
+
+    def main(self):
+        """."""
+        _command = sys.argv[1:2]
+
+        if _command.__len__() == 0:
+            sys.__stdout__.write(self.show_usage_msg())
+            return 1
+        if not self.is_cmd_available(_command[0]):
+            sys.__stdout__.write(self.not_available_msg())
+            return 1
+
+        self.display(_command[0])
+        return 0
+
+
+if __name__ == '__main__':
+    """This Bolck is used for Unit Test.
+    """
+    helper = HelpMe()
+    sys.exit( helper() )
