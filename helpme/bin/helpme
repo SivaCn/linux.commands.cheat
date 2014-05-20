@@ -16,10 +16,10 @@ __all__ = ['HelpMe']  # Exposed classes or methods.
 __author__ = r'Siva Cn (www.cnsiva.com)'
 
 NOT_AVAILABLE = """\nError: Unable to help you !, command not fed.\n\
-Use `help_me -a` to create help on this command.\n"""
+Use `helpme -a` to create help on this command.\n"""
 
 SHOW_USAGE = """\nUsage:\n\
-    help_me <command>\n"""
+    helpme <command>\n"""
 
 
 class ReportError(object):
@@ -68,7 +68,7 @@ class HelperClass(Colored, ReportError):
         """."""
         super(HelperClass, self).__init__()
 
-        self.SRC_DIR = os.path.join( os.environ['HOME'], '.help_me', 'src' )
+        self.SRC_DIR = os.path.join( os.environ['HOME'], '.helpme', 'src' )
 
         self.available_cmds = [ _cmd for _cmd in os.listdir(self.SRC_DIR)
                                 if not _cmd.startswith('__') ]

@@ -1,16 +1,20 @@
 #!/bin/sh
 
+
+echo -e "helpme ... Installation Started"
 ## Check for ~/bin directory
-if [ -d ~/bin ]; then
-  echo
+if [[ -d ~/bin && ! -L ~/bin ]] ; then
+      echo
 else
-  mkdir ~/bin
+      mkdir ~/bin
 fi
 
 ## Copy the program
-cp ./help_me ~/bin/
+cp ./helpme/bin/helpme ~/bin
 
 ## Copy the Sources
-mkdir ~/.help_me
+cp -r ./helpme/.helpme/ ~/
 
-cp -rf .help_me/* ~/.help_me/
+echo
+
+echo -e "Installation Completed"
