@@ -4,14 +4,15 @@ README
 
 Thank you for using this Software
 
+
 Installation Steps:
 
-    $ git clone https://github.com/SivaCn/helpme.git
+    $ git clone git@github.com:SivaCn/linux.commands.cheat.git
 
-    $ cd helpme
+    $ cd linux.commands.cheat
 
     $ sh install.sh
 
 Usage:
 
-    $ helpme <command>
+    $ cheat <command>
