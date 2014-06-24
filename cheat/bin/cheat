@@ -15,8 +15,7 @@ __all__ = ['Cheat']  # Exposed classes or methods.
 
 __author__ = r'Siva Cn (www.cnsiva.com)'
 
-NOT_AVAILABLE = """\nError: Unable to help you !, command not fed.\n\
-Use `cheat -a` to create help on this command.\n"""
+NOT_AVAILABLE = """\nError: Unable to help you !, command not fed.\n"""
 
 SHOW_USAGE = """\nUsage:\n\
     cheat <command>\n"""
@@ -50,16 +49,16 @@ class Colored(object):
         self.str_template = """{0}{1}{2}\n"""
 
     def color_cmd(self, text):
-        return self.str_template.format( '', text, '' )
+        return self.str_template.format('', text, '')
 
     def color_info(self, text):
-        return self.str_template.format( self.OKBLUE, text, self.ENDC )
+        return self.str_template.format(self.OKBLUE, text, self.ENDC)
 
     def color_docs(self, text):
-        return self.str_template.format( self.OKGREEN, text, self.ENDC )
+        return self.str_template.format(self.OKGREEN, text, self.ENDC)
 
     def color_warn(self, text):
-        return self.str_template.format( self.OKGREEN, text, self.ENDC )
+        return self.str_template.format(self.OKGREEN, text, self.ENDC)
 
 
 class HelperClass(Colored, ReportError):
@@ -68,7 +67,7 @@ class HelperClass(Colored, ReportError):
         """."""
         super(HelperClass, self).__init__()
 
-        self.SRC_DIR = os.path.join( os.environ['HOME'], '.cheat', 'src' )
+        self.SRC_DIR = os.path.join(os.environ['HOME'], '.cheat', 'src')
 
         self.available_cmds = [ _cmd for _cmd in os.listdir(self.SRC_DIR)
                                 if not _cmd.startswith('__') ]
@@ -103,12 +102,13 @@ class HelperClass(Colored, ReportError):
 
     def display(self, _command):
         """."""
-        cmd_file_path = os.path.join( self.SRC_DIR, _command )
+        cmd_file_path = os.path.join(self.SRC_DIR, _command)
 
         with open(cmd_file_path) as fp:
             line = fp.readline()
             while line:
-                sys.__stdout__.write( self.__format_str(line) )
+                if not line.startswith('--'):
+                    sys.__stdout__.write(self.__format_str(line))
                 line = fp.readline()
 
 
@@ -144,5 +144,5 @@ class Cheat(HelperClass):
 if __name__ == '__main__':
     """This Bolck is used for Unit Test.
     """
-    helper = Cheat()
-    sys.exit(helper())
+    cheat = Cheat()
+    sys.exit(cheat())

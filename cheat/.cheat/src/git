@@ -52,6 +52,8 @@ git diff branch_1 branch_2                              # Check difference betwe
 git log                                                 # Show all the commits
 git status                                              # Show the changes from last commit
 
+# FOR DETAILED HELP PAGE ON GIT PLEASE USE THE FOLLOWING COMMAND
+cat ~/.chear/src/git | less
 
 
 ## ============================================================================================== ##
