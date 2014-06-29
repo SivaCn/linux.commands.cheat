@@ -70,6 +70,9 @@ do
     echo $file found;
 done
 
+# In-Line for loop
+$ for n in def; do grep -i $n <file>; done
+
 # To implement a case command:
 case "$1"
 in
