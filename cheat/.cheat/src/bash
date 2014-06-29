@@ -1,3 +1,25 @@
+Shortcut - Bash
+
+    Ctrl+U – Clear to the beginning of the line (quicker then pressing backspace repeatedly)
+    Ctrl+K – Clear to the end of the line
+    Ctrl+W – Delete the previous word
+    Ctrl+L – Clear the screen
+    Ctrl+A – Go to the start of the line
+    Ctrl+E – Go to the end of the line
+    Ctrl+C – send sigint to the current process
+    Ctrl+D – send eof to the current process (useful you logging out of bash and other interactive shells)
+    Ctrl+Z – send sigtstp to the current process causing it to suspend (type fg to start it again – more on this in the Jobs section)
+
+Shortcut - Terminal:
+
+    Ctrl+Shift+C – copy
+    Ctrl+Shift+V – paste
+    Ctrl+Shift+T – new tab
+    Ctrl+Shift+M – hide/show the menu bar (a kde thing)
+    Shift+Left Arrow – go to next tab (probably konsole only)
+    Shift+Right Arrow – go to previous tab
+    Ctrl+Shift+Arrow – Move tab left/right
+
 Display a cool clock on your terminal
 
     watch -t -n1 "date +%T|figlet"
