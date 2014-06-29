@@ -15,4 +15,4 @@ Installation Steps:
 
 Usage:
 
-    $ cheat <command>
+    $ cheat <command>  # command should be available for cheat
