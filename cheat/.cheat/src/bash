@@ -1,3 +1,69 @@
+# Create a Directory and cd to it
+$ function mkdcd () { mkdir "$1" && cd "$1" }
+$ echo 'mkcd() { mkdir -p "$@" && cd "$_"; }' >> ~/.bashrc
+$ mkdir /home/foo/doc/bar && cd $_
+$ md () { mkdir -p "$@" && cd "$@"; }
+
+# Renaming files removing some unwanted extension
+$ for i in *ext; do mv $i ${i%.ext}; done
+
+# Echo PID of the current running command
+$ command & echo $!
+
+# expand a program-name into an absolute path on the bash command-line, using ctrl-e
+$ bind '"\C-e":"\eb `which \ef`\e\C-e"'
+    # Limitations:
+    # as written above, only works for programs with no file extention (i.e 'proggy', but not 'proggy.sh')
+    # because \eb maps to readine function backward-word rather then shell-backward-word (which
+    # is unbinded by default on ubuntu), and correspondingly for \ef.
+    # if you're willing to have Ctrl-f and Ctrl-g taken up too , you can insert the following lines
+    # into ~/.inputrc, in which case invoking Ctrl-e will do the right thing both for "proggy" and "proggy.sh".
+    # -- cut here --
+    # \C-f:shell-backward-word
+    # \C-g:shell-forward-word
+    # "\C-e":"\C-f`which \C-g`\e\C-e"
+    # -- cut here --
+
+# Pass TAB as field separator to sort, join, cut, etc.
+$ sort -t $'\t' -k 2 input.txt
+    # Use this BASH trick to create a variable containing the TAB character and pass it as the 
+    # argument to sort, join, cut and other commands which don't understand the \t notation.
+    # sort -t $'\t' ... join -t $'\t' ... cut -d $'\t' ...
+
+# Insert the last argument of the previous command
+$ !$
+    # for example if you did a:
+    # ls -la /bin/ls
+    # then
+    # ls !$
+    # is equivalent to doing a
+    # ls /bin/ls
+
+# download file1 file2 file3 file4 .... file 100
+$ for file in $(seq -f '%03.f' 1 $TOTAL ); do echo "($file/$TOTAL)"; curl -f -O http://domain.com/Name_$file.ext; done
+
+# download file1 file2 file3 file4 .... file 100
+$ wget http://domain.com/file{1..100}
+
+# Write and run a quick C program
+$ cat | gcc -x c -o a.out - && ./a.out && rm a.out
+
+# Search back through previous commands
+$ Ctrl-R <search-text>
+
+# Go to parent directory of filename edited in last command
+$ cd `dirname $_`
+
+# Go to parent directory of filename edited in last command
+$ cd !$:h
+    # Use $!:t for the filename alone, without the dirname.
+
+# Count to 65535 in binary (for no apparent reason)
+$ a=`printf "%*s" 16`;b=${a//?/{0..1\}}; echo `eval "echo $b"`
+
+# For a $FILE, extracts the path, filename, filename without extension and extension.
+$ FILENAME=${FILE##*/};FILEPATH=${FILE%/*};NOEXT=${FILENAME%\.*};EXT=${FILE##*.}
+
 # To implement a for loop:
 for file in `ls .`;
 do 
