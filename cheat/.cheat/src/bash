@@ -12,3 +12,50 @@ in
     2) echo "two found";;
     3*) echo "something beginning with 3 found";;
 esac
+
+$ echo {one,two,red,blue}
+one two red blue
+
+$ echo {one,two,red,blue}fish
+onefish twofish redfish bluefish
+
+$ echo fish{one,two,red,blue}
+fishone fishtwo fishred fishblue
+
+$ echo fi{one,two,red,blue}sh
+fionesh fitwosh firedsh fibluesh
+
+$ echo {one, two, red, blue }fish
+{one, two, red, blue }fish
+
+$ echo "{one,two,red,blue} fish"
+{one,two,red,blue} fish
+
+$ echo {"one ","two ","red ","blue "}fish
+one fish two fish red fish blue fish
+
+$ echo {one,two,red,blue}" fish"
+one fish two fish red fish blue fish
+
+$ echo {{1,2,3},1,2,3}
+1 2 3 1 2 3
+
+$ echo {{1,2,3}1,2,3}
+11 21 31 2 3
+
+$ cp /etc/httpd/conf/httpd.conf{,.bak}
+    Notice that there is no character between the opening brace and the first comma.
+    It's perfectly acceptable to do this and is useful when adding characters to an existing
+    filename or when one argument is a substring of the other. Then, if I need to see what
+    changes I made later in the day, I use the diff command and reverse the order of the
+    strings inside the braces:
+
+$ date +%d-%b-%Y
+12-Mar-2004
+
+$ today=$(date +%d-%b-%Y)
+
+$ echo $today
+12-Mar-2004
+
+$ rpm -ql $(rpm -qa | grep httpd)
