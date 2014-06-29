@@ -21,3 +21,85 @@ ssh user@example.com -C -c blowfish -X
 
 # For more information, see:
 # http://unix.stackexchange.com/q/12755/44856
+
+
+To tunnel POP3 traffic using ssh:
+
+1. Make sure an ssh client is installed on your machine and an ssh server is installed on the POP3 server.
+
+2. Create a local ssh tunnel on your machine (port 1234 for this example) to the POP3 server's port 110. You will need to be the root user to bind to "privileged" ports (< 1024).
+# ssh -f -N -L 1234:localhost:110 user@POP3_server
+
+3. Test the tunnel.
+$ telnet localhost 1234
+You should see the POP3 server's banner information.
+
+4. Configure your mail client to access your mail via POP3 using mail server localhost and port 1234.
+
+"Reverse" ssh tunnel
+It is possible to create a "reverse" ssh tunnel. The reverse tunnel will allow you to create an ssh tunnel from your work computer to your home computer, for example, and then login to your work machine from your home machine even if your work firewall does not permit ssh traffic initiated from your home machine!
+
+For this to work, an ssh server must be installed on your work and home computer, and ssh (TCP port 22) must be allowed outbound from your work computer to your home computer.
+
+$ ssh -R remote_port:localhost:22 your_home_computer
+
+ex. $ ssh -R 2048:localhost:22 home.computer.com
+
+At home, you would then run ssh -p 2048 localhost to log into your work computer via ssh.
+
+Here is a script I run every 5 minutes through the cron facility on my work system to make sure the reverse ssh tunnel to my home system is up and running. It is useful in case my_home_system is rebooted.
+
+2006-11-15 update:
+
+#!/bin/sh
+
+# $REMOTE_HOST is the name of the remote system
+REMOTE_HOST=my.home.system
+
+# $REMOTE_PORT is the remote port number that will be used to tunnel
+# back to this system
+REMOTE_PORT=5000
+
+# $COMMAND is the command used to create the reverse ssh tunnel
+COMMAND="ssh -q -N -R $REMOTE_PORT:localhost:22 $REMOTE_HOST"
+
+# Is the tunnel up? Perform two tests:
+
+# 1. Check for relevant process ($COMMAND)
+pgrep -f -x "$COMMAND" > /dev/null 2>&1 || $COMMAND
+
+# 2. Test tunnel by looking at "netstat" output on $REMOTE_HOST
+ssh $REMOTE_HOST netstat -an | egrep "tcp.*:$REMOTE_PORT.*LISTEN" \
+   > /dev/null 2>&1
+if [ $? -ne 0 ] ; then
+   pkill -f -x "$COMMAND"
+   $COMMAND
+fi
+
+2006-09-20 update using pgrep:
+
+#!/bin/sh
+
+# REMOTE_HOST is the name of the remote system
+REMOTE_HOST=my.home.system
+
+# $COMMAND is the command used to create the reverse ssh tunnel
+COMMAND="ssh -N -R 7437:localhost:22 $REMOTE_HOST"
+
+# Is the tunnel up?
+pgrep -f -x "$COMMAND" > /dev/null 2>&1 || $COMMAND
+
+Old script:
+
+#!/bin/sh
+
+# $COMMAND is the command used to create the reverse ssh tunnel
+COMMAND='ssh -N -R 31337:localhost:22 my_home_system'
+
+# Is the tunnel up?
+CHECK_TUNNEL=`ps -eo args | grep "$COMMAND" | grep -v grep`
+
+# If the tunnel is not up, create the tunnel
+if [ -z "$CHECK_TUNNEL" ] ; then
+   $COMMAND
+fi
