@@ -1,2 +1,65 @@
 # sum integers from a file or stdin, one integer per line:
 printf '1\n2\n3\n' | awk '{ sum += $1} END {print sum}'
+
+Number of lines in a file 
+$awk ‘ END {print NR}’ file_name 
+  
+Number of columns in each row of a file 
+$awk ‘ {print NF’} file_name 
+
+Print column1, column5 and column7 of a data file or output of any columns list 
+$awk ‘{print $1, $5, $7}’ data_file 
+$cat file_name |awk ‘{print $1 $5 $7}’ 
+$ls –al |awk ‘{print $1, $5, $7}’ -- Prints file_permissions,size and date 
+  
+Syntax of running an awk program 
+Awk ‘program’ input file(s) 
+  
+List all files names whose file size greater than zero. 
+$ls –al |awk ‘$5 > 0 {print $9}’ 
+  
+List all files whose file size equal to 512bytes. 
+$ls –al |awk ‘$5 == 0 {print $9}’ 
+  
+print all lines 
+$awk ‘{print }’ file_name 
+$awk ‘{print 0}’ file_name 
+  
+Sort the output of file and eliminate duplicate rows 
+$awk ‘{print $1, $5, $7}’ |sort –u 
+  
+List all file names whose file size is greater than 512bytes and owner is "oracle" 
+$ls –al |awk ‘$3 == "oracle" && $5 > 512 {print $9}’ 
+
+List all lines longer that 50 characters 
+$awk ‘length($0) > 50 ‘{print }’ file_name 
+  
+List first two columns 
+$awk ‘{print $1, $2}’ file_name 
+  
+Swap first two columns of a file and print 
+$awk ‘{temp = $1; $1 = $2; $2 = temp; print }’ file_name 
+
+List all file names whose owner could be either "ora" or "root" 
+$ls –al |awk ‘$3 == "ora" || $3 == "root" {print $9}’ 
+  
+List all the files whose owner is not "ora" 
+$ls –al |awk ‘$3 != "ora" {print $9}’ 
+  
+List all lines which has atlease one or more characters 
+$awk ‘NF > 0 {print }’ file_name 
+  
+Replace first column as "ORACLE" in a data file 
+$awk ‘{$1 = "ORACLE"; print }’ data_file 
+  
+Remove first column values in a data file 
+$awk ‘{$1 =""; print }’ data_file 
+  
+Calculate total size of a directory in Mb 
+$ls –al |awk ‘{total +=$5};END {print "Total size: " total/1024/1024 " Mb"}’ 
+  
+Calculate total size of a directory including sub directories in Mb 
+$ls –lR |awk ‘{total +=$5};END {print "Total size: " total/1024/1024 " Mb"}’ 
+  
+Find largest file in a directory including sub directories 
+$ls –lR |awk ‘{print $5 "\t" $9}’ |sort –n |tail -1
